@@ -5,7 +5,7 @@
         private readonly int _clientPort;
         private readonly ClientMessageRegistry _registry;
 
-        public int Port => _clientPort;
+        public int Port { get { return _clientPort; } }
 
         public Client(string localIP, string serverIP, int serverPort) 
             : base(PortManager.AcquirePort(), serverIP, serverPort, new ClientMsgHandler())

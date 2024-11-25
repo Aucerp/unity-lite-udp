@@ -10,7 +10,7 @@ namespace Sample_05
         protected readonly Sender _sender;
         protected readonly IMessageHandler _msgHandler;
         protected bool _isRunning;
-        protected readonly CancellationTokenSource _cancellationTokenSource;
+        private Thread _receiveThread; // 用于存储线程对象
 
         protected NetworkManager(int listenPort, string targetAddress, int targetPort, IMessageHandler msgHandler)
         {
@@ -23,25 +23,34 @@ namespace Sample_05
             _sender = new Sender(targetAddress, targetPort);
             _msgHandler = msgHandler;
             _isRunning = true;
-            _cancellationTokenSource = new CancellationTokenSource();
             StartMessageLoop();
         }
 
         private void StartMessageLoop()
         {
-            Thread receiveThread = new Thread(() =>
+            _receiveThread = new Thread(() =>
             {
-                while (_isRunning && !_cancellationTokenSource.Token.IsCancellationRequested)
+                while (_isRunning)
                 {
-                    string message = _receiver.ReceiveMessage();
-                    if (!string.IsNullOrEmpty(message))
+                    try
                     {
-                        _receiver.ProcessIncomingData(message);
+                        string message = _receiver.ReceiveMessage();
+                        if (!string.IsNullOrEmpty(message))
+                        {
+                            _receiver.ProcessIncomingData(message);
+                        }
                     }
-                    Thread.Sleep(10);
+                    catch (Exception ex)
+                    {
+                        Debug.LogError(string.Format("Receive thread error: {0}", ex.Message));
+                    }
+
+                    Thread.Sleep(10); // 防止高频占用 CPU
                 }
             });
-            receiveThread.Start();
+
+            _receiveThread.IsBackground = true; // 设置为后台线程
+            _receiveThread.Start();
         }
 
         public void SendMessage(string messageType, string data)
@@ -57,17 +66,21 @@ namespace Sample_05
 
         public virtual void Dispose()
         {
-            _isRunning = false;
-            _cancellationTokenSource.Cancel();
+            _isRunning = false; // 停止接收线程
+            if (_receiveThread != null && _receiveThread.IsAlive)
+            {
+                _receiveThread.Join(); // 等待线程安全退出
+            }
+
             if (_receiver != null)
             {
                 _receiver.Close();
             }
+
             if (_sender != null)
             {
                 _sender.Close();
             }
-            _cancellationTokenSource.Dispose();
         }
     }
 }

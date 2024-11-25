@@ -8,7 +8,7 @@ public class NetworkUtilsTests
     public void IsValidIPv4_WithInvalidInputs_ReturnsFalse()
     {
         // Arrange
-        string[] invalidIPs = new string[] 
+        string[] invalidIPs = new string[]
         {
             null,
             "",
@@ -26,7 +26,7 @@ public class NetworkUtilsTests
         // Act & Assert
         foreach (string ip in invalidIPs)
         {
-            Assert.IsFalse(NetworkUtils.IsValidIPv4(ip), $"IP '{ip}' should be invalid");
+            Assert.IsFalse(NetworkUtils.IsValidIPv4(ip), string.Format("IP '{0}' should be invalid", ip));
         }
     }
 
@@ -34,7 +34,7 @@ public class NetworkUtilsTests
     public void IsValidIPv4_WithValidInputs_ReturnsTrue()
     {
         // Arrange
-        string[] validIPs = new string[] 
+        string[] validIPs = new string[]
         {
             "127.0.0.1",
             "192.168.1.1",
@@ -47,7 +47,7 @@ public class NetworkUtilsTests
         // Act & Assert
         foreach (string ip in validIPs)
         {
-            Assert.IsTrue(NetworkUtils.IsValidIPv4(ip), $"IP '{ip}' should be valid");
+            Assert.IsTrue(NetworkUtils.IsValidIPv4(ip), string.Format("IP '{0}' should be valid", ip));
         }
     }
-} 
+}

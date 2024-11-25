@@ -7,7 +7,7 @@ public class NetworkTest : MonoBehaviour
     [SerializeField] private string _serverIP = "127.0.0.1";
     [SerializeField] private int _serverPort = 23000;
     private string _clientIP = "127.0.0.1";
-    
+
     private Server _server;
     private List<Client> _clients;
     private float _nextPingTime;
@@ -20,7 +20,7 @@ public class NetworkTest : MonoBehaviour
         CreateClients(3);
     }
 
-    void Start() 
+    void Start()
     {
         int index = 1;
         if (_clients != null && _clients.Count > index)
@@ -61,11 +61,11 @@ public class NetworkTest : MonoBehaviour
         try
         {
             _server = new Server(_serverIP, _serverPort);
-            Debug.Log($"Server started on {_serverIP}:{_serverPort}");
+            Debug.Log(string.Format("Server started on {0}:{1}", _serverIP, _serverPort));
         }
         catch (System.ArgumentException ex)
         {
-            Debug.LogError($"Failed to start server: {ex.Message}");
+            Debug.LogError(string.Format("Failed to start server: {0}", ex.Message));
         }
     }
 
@@ -83,11 +83,11 @@ public class NetworkTest : MonoBehaviour
         {
             var client = new Client(_clientIP, _serverIP, _serverPort);
             _clients.Add(client);
-            Debug.Log($"Client created on {_clientIP}:{client.Port}, connecting to {_serverIP}:{_serverPort}");
+            Debug.Log(string.Format("Client created on {0}:{1}, connecting to {2}:{3}", _clientIP, client.Port, _serverIP, _serverPort));
         }
         catch (System.ArgumentException ex)
         {
-            Debug.LogError($"Failed to create client: {ex.Message}");
+            Debug.LogError(string.Format("Failed to create client: {0}", ex.Message));
         }
     }
 
@@ -106,7 +106,7 @@ public class NetworkTest : MonoBehaviour
     {
         foreach (var client in _clients)
         {
-            client.SendMessage("Ping", $"Ping from client {client.Port}");
+            client.SendMessage("Ping", string.Format("Ping from client {0}", client.Port));
         }
     }
 
@@ -114,7 +114,7 @@ public class NetworkTest : MonoBehaviour
     {
         foreach (var client in _clients)
         {
-            client.SendMessage("Custom", $"Custom message from client {client.Port}");
+            client.SendMessage("Custom", string.Format("Custom message from client {0}", client.Port));
         }
     }
 
