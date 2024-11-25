@@ -7,12 +7,14 @@ namespace Sample_05
         private readonly Action<NetworkMessage> _handleClientConnect;
         private readonly Action<NetworkMessage> _handlePingMessage;
         private readonly Action<NetworkMessage> _handleCustomMessage;
+        private readonly Action<NetworkMessage> _handlePlayeEPIDMessage;
 
         public ServerMessageRegistry(ServerMsgHandler msgHandler) : base(msgHandler)
         {
             _handleClientConnect = HandleClientConnect;
             _handlePingMessage = HandlePingMessage;
             _handleCustomMessage = HandleCustomMessage;
+            _handlePlayeEPIDMessage = HandlePlayeEPIDMessage;
         }
 
         public override void RegisterHandlers()
@@ -21,6 +23,7 @@ namespace Sample_05
             handler.RegisterHandler("Connect", _handleClientConnect);
             handler.RegisterHandler("Ping", _handlePingMessage);
             handler.RegisterHandler("Custom", _handleCustomMessage);
+            handler.RegisterHandler("PlayeEPID", _handlePlayeEPIDMessage);
         }
 
         private void HandleClientConnect(NetworkMessage message)
@@ -36,6 +39,10 @@ namespace Sample_05
         private void HandleCustomMessage(NetworkMessage message)
         {
             UnityEngine.Debug.Log(string.Format("Custom message: {0}", message.Data));
+        }
+        private void HandlePlayeEPIDMessage(NetworkMessage message)
+        {
+            //Log Player EP and PlayerID
         }
     }
 }
