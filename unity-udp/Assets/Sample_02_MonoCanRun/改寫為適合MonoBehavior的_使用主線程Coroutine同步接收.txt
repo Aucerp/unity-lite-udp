@@ -1,0 +1,2 @@
+if (_socketReceiver.Poll(1000, SelectMode.SelectRead))//超重要 加了才不會卡住
+使用 Poll 來檢測是否有數據可讀，並且在有數據時才調用 Receive，這樣就避免了阻塞行為。
