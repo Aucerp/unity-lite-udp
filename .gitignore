@@ -72,3 +72,6 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 unity-udp/Library
 unity-udp/Temp
+unity-udp/Assets/StreamingAssets/Record
+unity-udp/ProjectSettings
+unity-udp/obj
